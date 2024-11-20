@@ -25,11 +25,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "COA")
 	UCameraComponent* CameraComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stamina")
+	float Stamina;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stamina")
+	float MaxStamina;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stamina")
+	float StaminaDrainRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stamina")
+	float StaminaGainRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stamina")
+	bool bIsStaminaDrained;
+
 	// Called when the game starts or when spawned
 	//virtual void BeginPlay() override;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
+	virtual void Tick(float DeltaTime) override;
 	UPROPERTY(EditAnywhere, Category = "COA")
 	float RunSpeed;
 
@@ -38,4 +53,6 @@ private:
 	void RunReleased();
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
+	void DrainStamina(float DeltaTime);
+	void RecoverStamina(float DeltaTime);
 };

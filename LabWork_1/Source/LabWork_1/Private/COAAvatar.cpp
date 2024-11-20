@@ -5,7 +5,13 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 ACOAAvatar::ACOAAvatar() :
-	RunSpeed(900)
+	RunSpeed(900),
+	Stamina(100.0f),
+	MaxStamina(100.0f),
+	StaminaDrainRate(20.0f),
+	StaminaGainRate(10.0f),
+	bIsStaminaDrained(false)
+
 {
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	SpringArm->TargetArmLength = 300.0f;
@@ -17,6 +23,7 @@ ACOAAvatar::ACOAAvatar() :
 	CameraComponent->bUsePawnControlRotation = false;
 	SpringArm->bUsePawnControlRotation = true;
 	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 /*void ACOAAvatar::BeginPlay()
@@ -45,7 +52,10 @@ void ACOAAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void ACOAAvatar::RunPressed()
 {
-	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+	if (!bIsStaminaDrained)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+	}
 }
 
 void ACOAAvatar::RunReleased()
@@ -67,4 +77,40 @@ void ACOAAvatar::MoveRight(float Amount)
 	FRotator YawRotation(0.0f, ControlRotation.Yaw, 0.0f);
 	FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	AddMovementInput(RightDirection, Amount);
+}
+void ACOAAvatar::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (GetCharacterMovement()->MaxWalkSpeed == RunSpeed && !bIsStaminaDrained)
+	{
+		DrainStamina(DeltaTime);
+	}
+	else
+	{
+		RecoverStamina(DeltaTime);
+	}
+}
+
+void ACOAAvatar::DrainStamina(float DeltaTime)
+{
+	Stamina -= StaminaDrainRate * DeltaTime;
+
+	if (Stamina <= 0.0f)
+	{
+		Stamina = 0.0f;
+		bIsStaminaDrained = true;
+		RunReleased();
+	}
+}
+
+void ACOAAvatar::RecoverStamina(float DeltaTime)
+{
+	Stamina += StaminaGainRate * DeltaTime;
+
+	if (Stamina >= MaxStamina)
+	{
+		Stamina = MaxStamina;
+		bIsStaminaDrained = false;
+	}
 }
