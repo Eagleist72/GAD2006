@@ -72,3 +72,19 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+/Homework2/Intermediate
+/Homework2/Saved
+/Homework2/.vsconfig
+/Homework2/Homework2.sln
+/Homework2/.idea
+/Homework2/.vs
+/Homework2/Binaries
+/Homework2/DerivedDataCache
+/Homework3/.vsconfig
+/Homework3/Homework3.sln
+/Homework3/.idea
+/Homework3/.vs
+/Homework3/Binaries
+/Homework3/DerivedDataCache
+/Homework3/Intermediate
+/Homework3/Saved
